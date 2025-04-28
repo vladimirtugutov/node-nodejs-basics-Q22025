@@ -9,7 +9,17 @@ const read = async () => {
   const filePath = join(__dirname, 'files', 'fileToRead.txt');
   const readStream = createReadStream(filePath);
 
-  readStream.pipe(process.stdout);
+  readStream.on('error', (err) => {
+    console.error('Error:', err.message);
+  });
+
+  readStream.on('open', () => {
+    readStream.pipe(process.stdout);
+  });
+
+  readStream.on("end", () => {
+    console.log("");
+  });
 };
 
 await read();
